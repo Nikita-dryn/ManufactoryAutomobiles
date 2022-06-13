@@ -1,8 +1,5 @@
 package random
 
-import kotlin.random.Random
+import kotlin.random.Random.Default.nextInt
 
-class RandomOfAutopilot
-{
-    fun setAutopilots(): Int = Random.nextInt(10,80)
-}
+class RandomOfAutopilot { fun setAutopilots(): Int = nextInt(10,80) }

@@ -1,57 +1,67 @@
 package bilder
 
-import printusefull.PrintUsefull
-import random.RandomOfAutopilot
-import kotlin.test.todo
+import utility.PrintAvailabilityAutopilots
+import random.*
+import utility.PrintVehicle
 
 class BuildOfProject
 {
+    private val randomOfSales = RandomOfSale()
+    private  val printAvailabilityAutopilots = PrintAvailabilityAutopilots()
+    private val printVehicle = PrintVehicle()
+    private val justForBrief = justForBrief()
 
     fun buildOfProject()
     {
-        val sailedAutomobiles = random.RandomOfSale().randomOfSalesForYear()
-        val sailedPickups = random.RandomOfSale().randomOfSalesForYear()
-        val sailedTrucks = random.RandomOfSale().randomOfSalesForYear()
+        val sailedAutomobiles = randomOfSales.randomOfSalesForYear()
+        val sailedPickups = randomOfSales.randomOfSalesForYear()
+        val sailedTrucks = randomOfSales.randomOfSalesForYear()
+        val car = "Car"
+        val pickup = "Pickup"
+        val truck = "Truck"
+
 
         when
         {
-            sailedAutomobiles > sailedPickups and sailedTrucks ->
+            comparingNumbersOnTheMost(sailedAutomobiles, sailedPickups, sailedTrucks)  ->
             {
-                println("${PrintUsefull().printAutomobile()} ${justForBrief()} $sailedAutomobiles")
-                comparingAmountsWithAndWithoutAutopilots(PrintUsefull().printAutomobile())
+                instructionForWinner(car, sailedAutomobiles)
             }
-            sailedPickups > sailedAutomobiles and sailedTrucks ->
+            comparingNumbersOnTheMost(sailedAutomobiles, sailedPickups, sailedTrucks) ->
             {
-                println("${PrintUsefull().printPickup()} ${justForBrief()} $sailedPickups")
-                comparingAmountsWithAndWithoutAutopilots(PrintUsefull().printPickup())
+                instructionForWinner(pickup, sailedPickups)
             }
-            sailedTrucks > sailedAutomobiles and sailedPickups ->
+            comparingNumbersOnTheMost(sailedAutomobiles, sailedPickups, sailedTrucks) ->
             {
-                println("${PrintUsefull().printTruck()} ${justForBrief()} $sailedTrucks")
-                comparingAmountsWithAndWithoutAutopilots(PrintUsefull().printTruck())
+                instructionForWinner(truck, sailedTrucks)
             }
         }
-
-
     }
 
-    private fun justForBrief() = PrintUsefull().printWinningWithoutAutopilots()
-    private fun justForBriefOnNextYear() = PrintUsefull().printWinningWithoutAutopilotsOnNextYear()
-    private fun amountOfSalesForNextYear() = random.RandomOfSale().randomOfSalesForYear()
-    private fun amountSaleWithSetAutopilots() = (amountOfSalesForNextYear() * (RandomOfAutopilot().setAutopilots() / 100)) * 100
 
-    private fun comparingAmountsWithAndWithoutAutopilots(item: String)
+    private fun instructionForWinner(nameOfVehicle: String, sailedVehicle: Int )
     {
-        val amountVehicleWithoutAutopilots = amountOfSalesForNextYear() - amountSaleWithSetAutopilots()
-        if(amountVehicleWithoutAutopilots > amountSaleWithSetAutopilots())
-        {
-            println("$item ${justForBriefOnNextYear()} $amountVehicleWithoutAutopilots")
-
-        }
-        else if(amountVehicleWithoutAutopilots < amountSaleWithSetAutopilots())
-        {
-            println("$item + ${PrintUsefull().printWinningWithAutopilots()}  ${amountSaleWithSetAutopilots()}")
-        }
-
+        println("${printVehicle.printName(nameOfVehicle)} $justForBrief $sailedVehicle")
+        comparingAutos(printVehicle.printName(nameOfVehicle))
     }
+
+    fun comparingNumbersOnTheMost(firstNumber: Int, secondNumber: Int, thirdNumber: Int): Boolean =
+        when
+        {
+            firstNumber > secondNumber && thirdNumber < firstNumber -> true
+            secondNumber > firstNumber && thirdNumber < secondNumber -> true
+            else -> false
+        }
+
+
+    private fun justForBrief() = printAvailabilityAutopilots.printWinningWithoutAutopilots()
+    private fun justForBriefOnNextYear() = printAvailabilityAutopilots.printWinningWithoutAutopilotsOnNextYear()
+    private fun amountOfSalesForNextYear() = randomOfSales.randomOfSalesForYear()
+    private fun amountSaleWithAutopilots() = (amountOfSalesForNextYear() * (RandomOfAutopilot().setAutopilots() / 100)) * 100
+    private fun calculateWithoutAP() = amountOfSalesForNextYear() - amountSaleWithAutopilots()
+    private fun isMoreAutopilots() = calculateWithoutAP() > amountSaleWithAutopilots()
+
+    private fun comparingAutos(item: String) =
+        if(isMoreAutopilots()) println("$item ${justForBriefOnNextYear()} ${calculateWithoutAP()}")
+        else println("$item + ${printAvailabilityAutopilots.printWinnerWA()} ${amountSaleWithAutopilots()}")
 }
